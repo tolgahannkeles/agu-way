@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_map/pages/main_screen.dart';
-import 'package:test_map/pages/map_screen.dart';
 
-import 'package:test_map/pages/map_tab.dart';
-import 'package:test_map/pages/map_view.dart';
-import 'package:test_map/pages/search.dart';
 import 'package:test_map/resources/colors.dart';
 
 void main() {
@@ -22,7 +18,7 @@ class MyApp extends StatelessWidget {
         bottomAppBarTheme: BottomAppBarTheme(color: PageColors.aguColor),
       ),
       debugShowCheckedModeBanner: false,
-      home: const MapScreen(),
+      home: const MainScreen(),
     );
   }
 }

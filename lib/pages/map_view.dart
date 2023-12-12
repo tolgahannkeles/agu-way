@@ -80,17 +80,6 @@ class _MapViewState extends State<MapView> {
       polylines: Set<Polyline>.of(polylines.values),
       markers: Set<Marker>.of(markers.values),
       onMapCreated: (GoogleMapController controller) {
-        print("""
-********************************************************
-********************************************************
-YENİ STATE KURULDU:
-$targetLatitude
-$targetLongitude
-
-********************************************************
-********************************************************
-
-""");
         _controller.complete(controller);
       },
     );

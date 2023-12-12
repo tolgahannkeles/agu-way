@@ -1,6 +1,6 @@
 # test_map
 
-A new Flutter project.
+COMP205 Term Final project.
 
 ## Getting Started
 

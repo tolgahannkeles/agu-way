@@ -29,20 +29,21 @@ class _MapTabState extends State<MapTab> {
 
   void _updateMapView(double latitude, double longitude) {
     setState(() {
-      //mapView.updateState(longitude: longitude, latitude: latitude);
-      //mapView = MapView(latitude: latitude, longitude: longitude);
+      mapView = MapView(latitude: latitude, longitude: longitude);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(children: [
-      mapView,
-      Padding(
-        padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
-        child: _searchBox(),
-      ),
-    ]);
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
+          child: _searchBox(),
+        ),
+        SizedBox(height: 500, child: mapView),
+      ],
+    );
   }
 
   Column _searchBox() {
