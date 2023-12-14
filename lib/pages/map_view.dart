@@ -1,15 +1,13 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:test_map/map_api.dart';
-import 'package:test_map/services/LocationService.dart';
+import 'package:test_map/services/LocationProvider.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class MapView extends StatefulWidget {
-  MapView({super.key, this.longitude, this.latitude});
-  double? longitude;
-  double? latitude;
+  const MapView({Key? key}) : super(key: key);
 
   @override
   State<MapView> createState() => _MapViewState();
@@ -27,51 +25,39 @@ class _MapViewState extends State<MapView> {
   Map<PolylineId, Polyline> polylines = {};
   final Completer<GoogleMapController> _controller = Completer();
 
+  late LocationProvider locationProvider;
+
   static const CameraPosition _initialMap = CameraPosition(
-      target: LatLng(38.73742088739644, 35.475462278658),
-      zoom: 16.2046,
-      bearing: -20,
-      tilt: 0);
-
-  @override
-  void initState() {
-    targetLatitude = widget.latitude;
-    targetLongitude = widget.longitude;
-
-    LocationService.getStream().listen((Position? position) {
-      if (mounted) {
-        setState(() {
-          latitude = position?.latitude;
-          longitude = position?.longitude;
-
-          print(latitude);
-
-          _addMarker(
-            LatLng(latitude ?? defaultLocation.latitude,
-                longitude ?? defaultLocation.longitude),
-            "current",
-            BitmapDescriptor.defaultMarkerWithHue(90),
-          );
-
-          if (targetLongitude == null || targetLatitude == null) {
-          } else {
-            _addMarker(
-              LatLng(targetLatitude!, targetLongitude!),
-              "destination",
-              BitmapDescriptor.defaultMarker,
-            );
-
-            getPolyline();
-          }
-        });
-      }
-    });
-
-    super.initState();
-  }
+    target: LatLng(38.73742088739644, 35.475462278658),
+    zoom: 16.2046,
+    bearing: -20,
+    tilt: 0,
+  );
 
   @override
   Widget build(BuildContext context) {
+    locationProvider = Provider.of<LocationProvider>(context);
+    targetLatitude = locationProvider.targetLocation?.latitude;
+    targetLongitude = locationProvider.targetLocation?.longitude;
+    latitude = locationProvider.currentLocation?.latitude;
+    longitude = locationProvider.currentLocation?.longitude;
+
+    _addMarker(
+      LatLng(
+          latitude ?? defaultLocation.latitude, longitude ?? defaultLocation.longitude),
+      "current",
+      BitmapDescriptor.defaultMarkerWithHue(90),
+    );
+
+    if (targetLongitude != null && targetLatitude != null) {
+      _addMarker(
+        LatLng(targetLatitude!, targetLongitude!),
+        "destination",
+        BitmapDescriptor.defaultMarker,
+      );
+      getPolyline();
+    }
+
     return GoogleMap(
       initialCameraPosition: _initialMap,
       mapType: MapType.satellite,
@@ -85,13 +71,13 @@ class _MapViewState extends State<MapView> {
     );
   }
 
-  _addMarker(LatLng position, String id, BitmapDescriptor descriptor) {
+  void _addMarker(LatLng position, String id, BitmapDescriptor descriptor) {
     MarkerId markerId = MarkerId(id);
     Marker marker = Marker(markerId: markerId, icon: descriptor, position: position);
     markers[markerId] = marker;
   }
 
-  _addPolyLine(List<LatLng> polylineCoordinates) {
+  void _addPolyLine(List<LatLng> polylineCoordinates) {
     PolylineId id = const PolylineId("poly");
     Polyline polyline = Polyline(
       polylineId: id,
@@ -99,19 +85,12 @@ class _MapViewState extends State<MapView> {
       width: 8,
       color: Colors.pink,
     );
-    if (mounted) {
-      setState(() {
-        polylines[id] = polyline;
-      });
-    }
+    setState(() {
+      polylines[id] = polyline;
+    });
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
-  void getPolyline() async {
+  Future<void> getPolyline() async {
     List<LatLng> polylineCoordinates = [];
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
@@ -122,9 +101,8 @@ class _MapViewState extends State<MapView> {
       travelMode: TravelMode.walking,
     );
     if (result.points.isNotEmpty) {
-      for (var point in result.points) {
-        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-      }
+      polylineCoordinates =
+          result.points.map((point) => LatLng(point.latitude, point.longitude)).toList();
     } else {
       print(result.errorMessage);
     }

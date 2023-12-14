@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:test_map/data/location_data.dart';
 import 'package:test_map/models/location.dart';
 import 'package:test_map/pages/map_view.dart';
 import 'package:test_map/resources/colors.dart';
+import 'package:test_map/services/LocationProvider.dart';
 
 class MapTab extends StatefulWidget {
   const MapTab({super.key});
@@ -13,44 +15,42 @@ class MapTab extends StatefulWidget {
 }
 
 class _MapTabState extends State<MapTab> {
-  final TextEditingController _searchController = TextEditingController();
+  LocationProvider? locationProvider;
+  @override
+  Widget build(BuildContext context) {
+    locationProvider = Provider.of<LocationProvider>(context);
+    return Stack(
+      children: [
+        const MapView(),
+        FindClassField(
+          onFound: (location) {
+            locationProvider?.setNewTarget(location);
+          },
+        ),
+      ],
+    );
+  }
+}
+
+class FindClassField extends StatefulWidget {
+  final void Function(LatLng location)? onFound;
+  const FindClassField({super.key, required this.onFound});
+
+  @override
+  State<FindClassField> createState() => _FindClassFieldState();
+}
+
+class _FindClassFieldState extends State<FindClassField> {
+  TextEditingController controller = TextEditingController();
   List<LocationModel> originalList = DummyData.locations;
   List<LocationModel> filteredList = [];
-  MapView mapView = MapView(latitude: 38.741629, longitude: 35.474714);
-
-  void _filterList(String searchText) {
-    setState(() {
-      filteredList = originalList
-          .where(
-              (item) => item.roomName.toLowerCase().startsWith(searchText.toLowerCase()))
-          .toList();
-    });
-  }
-
-  void _updateMapView(double latitude, double longitude) {
-    setState(() {
-      mapView = MapView(latitude: latitude, longitude: longitude);
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.only(top: 10, right: 10, left: 10),
-          child: _searchBox(),
-        ),
-        SizedBox(height: 500, child: mapView),
-      ],
-    );
-  }
-
-  Column _searchBox() {
-    return Column(
-      children: [
         TextField(
-          controller: _searchController,
+          controller: controller,
           onChanged: (value) {
             _filterList(value);
           },
@@ -87,13 +87,22 @@ class _MapTabState extends State<MapTab> {
     );
   }
 
+  void _filterList(String searchText) {
+    setState(() {
+      filteredList = originalList
+          .where(
+              (item) => item.roomName.toLowerCase().startsWith(searchText.toLowerCase()))
+          .toList();
+    });
+  }
+
   Widget _searchItem(int index) {
     return Padding(
       padding: const EdgeInsets.only(left: 50, right: 70),
       child: InkWell(
         onTap: () {
           LatLng latLng = filteredList[index].building.getLocation();
-          _updateMapView(latLng.latitude, latLng.longitude);
+          widget.onFound?.call(latLng);
         },
         child: SizedBox(
           height: 50,

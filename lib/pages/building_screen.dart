@@ -3,7 +3,7 @@ import 'package:photo_view/photo_view.dart';
 import 'package:test_map/services/LinePainter.dart';
 
 class BuildingScreen extends StatefulWidget {
-  const BuildingScreen({Key? key}) : super(key: key);
+  const BuildingScreen({super.key});
 
   @override
   State<BuildingScreen> createState() => _BuildingScreenState();
@@ -12,36 +12,28 @@ class BuildingScreen extends StatefulWidget {
 class _BuildingScreenState extends State<BuildingScreen> {
   @override
   Widget build(BuildContext context) {
-    var image = Image.asset(
-      "assets/images/kroki.png",
-      fit: BoxFit.cover,
-    );
-    var ratio = ((image.height ?? 0) / (image.width ?? 1));
-
     return Scaffold(
       appBar: AppBar(
-        title: Text("Building Screen"),
+        title: const Text("Building Screen"),
       ),
-      body: normalView(),
+      body: const NormalView(),
     );
   }
 }
 
-class normalView extends StatelessWidget {
-  const normalView({
-    super.key,
-  });
+class NormalView extends StatelessWidget {
+  const NormalView({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
         PhotoView(
-          imageProvider: AssetImage("assets/images/kroki.png"),
+          imageProvider: const AssetImage("assets/images/kroki.png"),
           enablePanAlways: true,
         ),
         CustomPaint(
-          painter: LinePainter(Offset(100, 50), Offset(100, 250)),
+          painter: LinePainter(const Offset(100, 50), const Offset(100, 250)),
         ),
       ],
     );

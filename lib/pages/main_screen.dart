@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:test_map/pages/home_page.dart';
-import 'package:test_map/pages/new_mapView.dart';
+import 'package:test_map/pages/home_tab.dart';
+import 'package:test_map/pages/map_tab.dart';
 import 'package:test_map/resources/strings.dart';
 
 class MainScreen extends StatefulWidget {
@@ -19,7 +19,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         length: TabViews.values.length,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          drawer: Drawer(),
+          drawer: const Drawer(),
           appBar: AppBar(
             title: const Text(Strings.appName),
           ),
@@ -60,9 +60,9 @@ extension TabExtension on TabViews {
   Widget getView() {
     switch (name.toLowerCase()) {
       case "home":
-        return const HomeScreen();
+        return const HomeTab();
       case "map":
-        return NewMapView();
+        return const MapTab();
       case "settings":
         return const Placeholder();
       default:
