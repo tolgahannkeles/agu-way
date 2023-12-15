@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:test_map/pages/home_tab.dart';
 import 'package:test_map/pages/map_tab.dart';
+import 'package:test_map/pages/settings_tab.dart';
 import 'package:test_map/resources/strings.dart';
 
 class MainScreen extends StatefulWidget {
@@ -64,7 +65,7 @@ extension TabExtension on TabViews {
       case "map":
         return const MapTab();
       case "settings":
-        return const Placeholder();
+        return const SettingsTab();
       default:
         return const Placeholder();
     }

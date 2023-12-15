@@ -15,18 +15,11 @@ class LocationService {
     }
   }
 
-/*
-  static Stream<Position?> getStream() {
-    return Geolocator.getPositionStream(
-        locationSettings: LocationSettings(accuracy: LocationAccuracy.high));
-  }
-  */
-
   static Stream<Position?> getStream() async* {
     try {
       if (await _isEnabled() && await _requestPermission()) {
         yield* Geolocator.getPositionStream(
-          locationSettings: LocationSettings(accuracy: LocationAccuracy.high),
+          locationSettings: const LocationSettings(accuracy: LocationAccuracy.high),
         );
       } else {
         throw Exception("Location permission denied");

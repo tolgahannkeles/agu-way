@@ -7,7 +7,7 @@ import 'package:test_map/services/LocationProvider.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
 class MapView extends StatefulWidget {
-  const MapView({Key? key}) : super(key: key);
+  const MapView({super.key});
 
   @override
   State<MapView> createState() => _MapViewState();
@@ -60,7 +60,7 @@ class _MapViewState extends State<MapView> {
 
     return GoogleMap(
       initialCameraPosition: _initialMap,
-      mapType: MapType.satellite,
+      mapType: MapType.hybrid,
       zoomControlsEnabled: false,
       compassEnabled: false,
       polylines: Set<Polyline>.of(polylines.values),
@@ -85,9 +85,11 @@ class _MapViewState extends State<MapView> {
       width: 8,
       color: Colors.pink,
     );
-    setState(() {
-      polylines[id] = polyline;
-    });
+    if (mounted) {
+      setState(() {
+        polylines[id] = polyline;
+      });
+    }
   }
 
   Future<void> getPolyline() async {

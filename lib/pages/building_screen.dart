@@ -2,14 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:photo_view/photo_view.dart';
 import 'package:test_map/services/LinePainter.dart';
 
-class BuildingScreen extends StatefulWidget {
+class BuildingScreen extends StatelessWidget {
   const BuildingScreen({super.key});
 
-  @override
-  State<BuildingScreen> createState() => _BuildingScreenState();
-}
-
-class _BuildingScreenState extends State<BuildingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

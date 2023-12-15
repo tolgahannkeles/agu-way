@@ -5,7 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 class TestScreen extends StatelessWidget {
   final LatLng destinationCoordinates; // Elde ettiğiniz hedef koordinatları
 
-  TestScreen(this.destinationCoordinates);
+  const TestScreen(this.destinationCoordinates, {super.key});
 
   Future<void> openMaps() async {
     String url =

@@ -14,8 +14,9 @@ class MapTab extends StatefulWidget {
   State<MapTab> createState() => _MapTabState();
 }
 
-class _MapTabState extends State<MapTab> {
+class _MapTabState extends State<MapTab> with RouteAware {
   LocationProvider? locationProvider;
+
   @override
   Widget build(BuildContext context) {
     locationProvider = Provider.of<LocationProvider>(context);
@@ -29,6 +30,11 @@ class _MapTabState extends State<MapTab> {
         ),
       ],
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
 

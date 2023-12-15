@@ -21,4 +21,9 @@ class LocationProvider with ChangeNotifier {
     _targetLocation = target;
     notifyListeners();
   }
+
+  void cancelTarget() {
+    _targetLocation = null;
+    notifyListeners();
+  }
 }
