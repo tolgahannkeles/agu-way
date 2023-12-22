@@ -23,7 +23,9 @@ class ClassesPage extends StatelessWidget {
         )
         .toList();
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(building.name.toUpperCase()),
+      ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
         child: ListView.builder(
@@ -35,6 +37,8 @@ class ClassesPage extends StatelessWidget {
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20), color: PageColors.aguColor),
                 child: ListTile(
+                  iconColor: PageColors.aguWhite,
+                  textColor: PageColors.aguWhite,
                   onTap: () {
                     locationProvider?.setNewTarget(building.getLocation());
                     Navigator.of(context).push(MaterialPageRoute(

@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
@@ -50,6 +52,7 @@ class _FindClassFieldState extends State<FindClassField> {
   TextEditingController controller = TextEditingController();
   List<LocationModel> originalList = DummyData.locations;
   List<LocationModel> filteredList = [];
+  bool _showSuggestions = false;
 
   @override
   Widget build(BuildContext context) {
@@ -58,9 +61,14 @@ class _FindClassFieldState extends State<FindClassField> {
         TextField(
           controller: controller,
           onChanged: (value) {
+            setState(() {
+              _showSuggestions = true;
+            });
             _filterList(value);
           },
           decoration: InputDecoration(
+            focusedBorder: const OutlineInputBorder(
+                borderRadius: BorderRadius.all(Radius.circular(20))),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(20),
             ),
@@ -70,25 +78,41 @@ class _FindClassFieldState extends State<FindClassField> {
             fillColor: PageColors.aguColor,
             hintStyle: TextStyle(color: PageColors.aguWhite, fontWeight: FontWeight.bold),
             filled: true,
-            suffixIcon: const Icon(
-              Icons.arrow_right,
-              size: 50,
-            ),
+            suffixIcon: _showSuggestions
+                ? IconButton(
+                    onPressed: () {
+                      setState(() {
+                        _showSuggestions = false;
+                      });
+                    },
+                    icon: const Center(
+                      child: Icon(
+                        Icons.close,
+                        size: 50,
+                      ),
+                    ),
+                  )
+                : const Icon(
+                    Icons.arrow_right,
+                    size: 50,
+                  ),
             suffixIconColor: PageColors.aguWhite,
           ),
         ),
-        SizedBox(
-          height: filteredList.length > 4
-              ? MediaQuery.of(context).size.height * .25
-              : filteredList.length * 50,
-          child: ListView.builder(
-            itemCount: filteredList.length,
-            addRepaintBoundaries: false,
-            itemBuilder: (context, index) {
-              return _searchItem(index);
-            },
-          ),
-        ),
+        _showSuggestions
+            ? SizedBox(
+                height: filteredList.length > 4
+                    ? MediaQuery.of(context).size.height * .25
+                    : filteredList.length * 50,
+                child: ListView.builder(
+                  itemCount: filteredList.length,
+                  addRepaintBoundaries: false,
+                  itemBuilder: (context, index) {
+                    return _searchItem(index);
+                  },
+                ),
+              )
+            : const SizedBox(),
       ],
     );
   }
@@ -109,6 +133,7 @@ class _FindClassFieldState extends State<FindClassField> {
         onTap: () {
           LatLng latLng = filteredList[index].building.getLocation();
           widget.onFound?.call(latLng);
+          _showSuggestions = false;
         },
         child: SizedBox(
           height: 50,
@@ -129,6 +154,51 @@ class _FindClassFieldState extends State<FindClassField> {
               )),
         ),
       ),
+    );
+  }
+}
+
+class AutocompleteBasicExample extends StatelessWidget {
+  const AutocompleteBasicExample({super.key});
+
+  static const List<String> _kOptions = <String>[
+    'aardvark',
+    'bobcat',
+    'chameleon',
+  ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Autocomplete<String>(
+      optionsViewBuilder: (context, onSelected, options) {
+        return ListView.builder(
+          itemCount: options.length,
+          itemBuilder: (context, index) {
+            return Container(
+              decoration: BoxDecoration(
+                  color: Colors.white, border: Border.all(color: Colors.black)),
+              child: Text(
+                options.toList()[index],
+                style: const TextStyle(
+                    color: Colors.black,
+                    fontStyle: FontStyle.normal,
+                    decoration: TextDecoration.none),
+              ),
+            );
+          },
+        );
+      },
+      optionsBuilder: (TextEditingValue textEditingValue) {
+        if (textEditingValue.text == '') {
+          return const Iterable<String>.empty();
+        }
+        return _kOptions.where((String option) {
+          return option.contains(textEditingValue.text.toLowerCase());
+        });
+      },
+      onSelected: (String selection) {
+        debugPrint('You just selected $selection');
+      },
     );
   }
 }
