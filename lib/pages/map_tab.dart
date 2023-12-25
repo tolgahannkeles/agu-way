@@ -1,9 +1,8 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:test_map/data/location_data.dart';
+import 'package:test_map/models/building.dart';
 import 'package:test_map/models/location.dart';
 import 'package:test_map/pages/map_view.dart';
 import 'package:test_map/resources/colors.dart';
@@ -33,11 +32,6 @@ class _MapTabState extends State<MapTab> with RouteAware {
       ],
     );
   }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 }
 
 class FindClassField extends StatefulWidget {
@@ -50,12 +44,20 @@ class FindClassField extends StatefulWidget {
 
 class _FindClassFieldState extends State<FindClassField> {
   TextEditingController controller = TextEditingController();
-  List<LocationModel> originalList = DummyData.locations;
-  List<LocationModel> filteredList = [];
+  List<ClassElement> originalList = [];
+  List<ClassElement> filteredList = [];
   bool _showSuggestions = false;
+
+  List<ClassElement> getAllClasses() {
+    return Buildings.values
+        .expand((building) => building.getBuilding().floors)
+        .expand((floor) => floor.classes)
+        .toList();
+  }
 
   @override
   Widget build(BuildContext context) {
+    originalList = getAllClasses();
     return Column(
       children: [
         TextField(
@@ -120,8 +122,7 @@ class _FindClassFieldState extends State<FindClassField> {
   void _filterList(String searchText) {
     setState(() {
       filteredList = originalList
-          .where(
-              (item) => item.roomName.toLowerCase().startsWith(searchText.toLowerCase()))
+          .where((item) => item.name.toLowerCase().startsWith(searchText.toLowerCase()))
           .toList();
     });
   }
@@ -131,7 +132,7 @@ class _FindClassFieldState extends State<FindClassField> {
       padding: const EdgeInsets.only(left: 50, right: 70),
       child: InkWell(
         onTap: () {
-          LatLng latLng = filteredList[index].building.getLocation();
+          LatLng latLng = detectBuilding(filteredList[index].name).location;
           widget.onFound?.call(latLng);
           _showSuggestions = false;
         },
@@ -148,7 +149,7 @@ class _FindClassFieldState extends State<FindClassField> {
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 10.0),
-                    child: Text(filteredList[index].roomName),
+                    child: Text(filteredList[index].name),
                   ),
                 ],
               )),
@@ -156,49 +157,16 @@ class _FindClassFieldState extends State<FindClassField> {
       ),
     );
   }
-}
 
-class AutocompleteBasicExample extends StatelessWidget {
-  const AutocompleteBasicExample({super.key});
-
-  static const List<String> _kOptions = <String>[
-    'aardvark',
-    'bobcat',
-    'chameleon',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    return Autocomplete<String>(
-      optionsViewBuilder: (context, onSelected, options) {
-        return ListView.builder(
-          itemCount: options.length,
-          itemBuilder: (context, index) {
-            return Container(
-              decoration: BoxDecoration(
-                  color: Colors.white, border: Border.all(color: Colors.black)),
-              child: Text(
-                options.toList()[index],
-                style: const TextStyle(
-                    color: Colors.black,
-                    fontStyle: FontStyle.normal,
-                    decoration: TextDecoration.none),
-              ),
-            );
-          },
-        );
-      },
-      optionsBuilder: (TextEditingValue textEditingValue) {
-        if (textEditingValue.text == '') {
-          return const Iterable<String>.empty();
-        }
-        return _kOptions.where((String option) {
-          return option.contains(textEditingValue.text.toLowerCase());
-        });
-      },
-      onSelected: (String selection) {
-        debugPrint('You just selected $selection');
-      },
-    );
+  IBuilding detectBuilding(String name) {
+    if (name.startsWith("LB")) {
+      return Lab();
+    } else if (name.startsWith("BA")) {
+      return WareHouse();
+    } else if (name.startsWith("B") || name.startsWith("A")) {
+      return Steel();
+    } else {
+      return Steel();
+    }
   }
 }

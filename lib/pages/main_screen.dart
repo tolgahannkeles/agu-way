@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:test_map/pages/home_tab.dart';
 import 'package:test_map/pages/map_tab.dart';
-import 'package:test_map/pages/settings_tab.dart';
+import 'package:test_map/pages/plans_tab.dart';
 import 'package:test_map/resources/strings.dart';
 
 class MainScreen extends StatefulWidget {
@@ -20,7 +20,6 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
         length: TabViews.values.length,
         child: Scaffold(
           resizeToAvoidBottomInset: false,
-          drawer: const Drawer(),
           appBar: AppBar(
             title: const Text(Strings.appName),
           ),
@@ -35,7 +34,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               tabs: [
                 Tab(icon: TabViews.home.getIcon()),
                 Tab(icon: TabViews.map.getIcon()),
-                Tab(icon: TabViews.settings.getIcon()),
+                Tab(icon: TabViews.plans.getIcon()),
               ],
             )),
           ),
@@ -45,7 +44,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
               children: [
                 TabViews.home.getView(),
                 TabViews.map.getView(),
-                TabViews.settings.getView(),
+                TabViews.plans.getView(),
               ]),
         ));
   }
@@ -54,7 +53,7 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
 enum TabViews {
   home,
   map,
-  settings,
+  plans,
 }
 
 extension TabExtension on TabViews {
@@ -64,8 +63,8 @@ extension TabExtension on TabViews {
         return const HomeTab();
       case "map":
         return const MapTab();
-      case "settings":
-        return const SettingsTab();
+      case "plans":
+        return const PlansTab();
       default:
         return const Placeholder();
     }
@@ -77,8 +76,8 @@ extension TabExtension on TabViews {
         return const Icon(Icons.home_rounded);
       case "map":
         return const Icon(Icons.map_outlined);
-      case "settings":
-        return const Icon(Icons.settings);
+      case "plans":
+        return const Icon(Icons.place);
       default:
         return const Icon(Icons.error);
     }

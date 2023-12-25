@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:test_map/map_api.dart';
 import 'package:test_map/services/LocationProvider.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class MapView extends StatefulWidget {
   const MapView({super.key});
@@ -58,17 +60,52 @@ class _MapViewState extends State<MapView> {
       getPolyline();
     }
 
-    return GoogleMap(
-      initialCameraPosition: _initialMap,
-      mapType: MapType.hybrid,
-      zoomControlsEnabled: false,
-      compassEnabled: false,
-      polylines: Set<Polyline>.of(polylines.values),
-      markers: Set<Marker>.of(markers.values),
-      onMapCreated: (GoogleMapController controller) {
-        _controller.complete(controller);
-      },
+    return SafeArea(
+      child: GoogleMap(
+        initialCameraPosition: _initialMap,
+        mapType: MapType.hybrid,
+        zoomControlsEnabled: false,
+        compassEnabled: false,
+        polylines: Set<Polyline>.of(polylines.values),
+        markers: Set<Marker>.of(markers.values),
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+      ),
     );
+  }
+
+  Future<double> getDistance(LatLng origin, LatLng destination) async {
+    final apiKey = maps_api;
+    final url =
+        "https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin.latitude},${origin.longitude}&destinations=${destination.latitude},${destination.longitude}&key=$apiKey";
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+
+        // Check if the response contains distance information
+        if (data['rows'] != null &&
+            data['rows'].isNotEmpty &&
+            data['rows'][0]['elements'] != null &&
+            data['rows'][0]['elements'].isNotEmpty &&
+            data['rows'][0]['elements'][0]['distance'] != null) {
+          // Parse the distance from the response
+          final distanceText = data['rows'][0]['elements'][0]['distance']['text'];
+          final distanceValue = double.parse(distanceText.split(' ')[0]);
+          return distanceValue;
+        } else {
+          throw Exception('Failed to retrieve distance information');
+        }
+      } else {
+        throw Exception('Failed to load data');
+      }
+    } catch (e) {
+      print('Error: $e');
+      return Future.error('Failed to fetch distance data');
+    }
   }
 
   void _addMarker(LatLng position, String id, BitmapDescriptor descriptor) {

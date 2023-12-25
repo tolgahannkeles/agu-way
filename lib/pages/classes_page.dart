@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:test_map/data/location_data.dart';
-import 'package:test_map/models/location.dart';
+import 'package:test_map/models/building.dart';
 import 'package:test_map/pages/map_tab.dart';
 import 'package:test_map/resources/colors.dart';
 import 'package:test_map/services/LocationProvider.dart';
@@ -10,21 +9,17 @@ class ClassesPage extends StatelessWidget {
   Buildings building;
   ClassesPage({super.key, required this.building});
 
-  List<LocationModel> classes = [];
+  List<ClassElement> classes = [];
   LocationProvider? locationProvider;
 
   @override
   Widget build(BuildContext context) {
     locationProvider = Provider.of<LocationProvider>(context);
+    classes = building.getBuilding().floors.expand((floor) => floor.classes).toList();
 
-    classes = DummyData.locations
-        .where(
-          (element) => element.building == building,
-        )
-        .toList();
     return Scaffold(
       appBar: AppBar(
-        title: Text(building.name.toUpperCase()),
+        title: Text(building.getBuilding().name.toUpperCase()),
       ),
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 10.0),
@@ -40,7 +35,7 @@ class ClassesPage extends StatelessWidget {
                   iconColor: PageColors.aguWhite,
                   textColor: PageColors.aguWhite,
                   onTap: () {
-                    locationProvider?.setNewTarget(building.getLocation());
+                    locationProvider?.setNewTarget(building.getBuilding().location);
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => Scaffold(
                         body: const MapTab(),
@@ -56,7 +51,7 @@ class ClassesPage extends StatelessWidget {
                       ),
                     ));
                   },
-                  title: Text(classes[index].roomName),
+                  title: Text(classes[index].name),
                   trailing: const Icon(Icons.arrow_forward),
                 ),
               ),
