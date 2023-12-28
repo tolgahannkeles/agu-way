@@ -3,21 +3,24 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:test_map/map_api.dart';
+import 'package:test_map/pages/plan_screen.dart';
+import 'package:test_map/resources/colors.dart';
 import 'package:test_map/services/LocationProvider.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 
 class MapView extends StatefulWidget {
   const MapView({super.key});
-
   @override
   State<MapView> createState() => _MapViewState();
 }
 
 class _MapViewState extends State<MapView> {
-  double? latitude;
-  double? longitude;
+  BitmapDescriptor currentPin = BitmapDescriptor.defaultMarkerWithHue(90);
+  BitmapDescriptor targetPin = BitmapDescriptor.defaultMarker;
+  TravelMode travelMode = TravelMode.walking;
+
+  double? currentLatitude;
+  double? currentLongitude;
   double? targetLatitude;
   double? targetLongitude;
   LatLng defaultLocation = const LatLng(38.74074685584025, 35.47471327184061);
@@ -35,37 +38,59 @@ class _MapViewState extends State<MapView> {
     bearing: -20,
     tilt: 0,
   );
+  bool _isPlanOpened = false;
 
   @override
   Widget build(BuildContext context) {
     locationProvider = Provider.of<LocationProvider>(context);
     targetLatitude = locationProvider.targetLocation?.latitude;
     targetLongitude = locationProvider.targetLocation?.longitude;
-    latitude = locationProvider.currentLocation?.latitude;
-    longitude = locationProvider.currentLocation?.longitude;
+    currentLatitude = locationProvider.currentLocation?.latitude;
+    currentLongitude = locationProvider.currentLocation?.longitude;
 
     _addMarker(
-      LatLng(
-          latitude ?? defaultLocation.latitude, longitude ?? defaultLocation.longitude),
+      LatLng(currentLatitude ?? defaultLocation.latitude,
+          currentLongitude ?? defaultLocation.longitude),
       "current",
-      BitmapDescriptor.defaultMarkerWithHue(90),
+      currentPin,
     );
 
     if (targetLongitude != null && targetLatitude != null) {
       _addMarker(
         LatLng(targetLatitude!, targetLongitude!),
-        "destination",
-        BitmapDescriptor.defaultMarker,
+        "target",
+        targetPin,
       );
       getPolyline();
+    }
+
+    if (locationProvider.isReached) {
+      WidgetsBinding.instance.addPostFrameCallback((_) async {
+        if (!_isPlanOpened) {
+          bool? response = await Navigator.of(context).push<bool>(
+            MaterialPageRoute(
+                builder: (context) {
+                  _isPlanOpened = true;
+                  return PlanScreen(
+                    targetClass: locationProvider.targetClass!,
+                    targetDoor: locationProvider.targetDoor!,
+                  );
+                },
+                settings: const RouteSettings(),
+                fullscreenDialog: true),
+          );
+
+          if (response == false) {
+            _isPlanOpened = false;
+          }
+        }
+      });
     }
 
     return SafeArea(
       child: GoogleMap(
         initialCameraPosition: _initialMap,
         mapType: MapType.hybrid,
-        zoomControlsEnabled: false,
-        compassEnabled: false,
         polylines: Set<Polyline>.of(polylines.values),
         markers: Set<Marker>.of(markers.values),
         onMapCreated: (GoogleMapController controller) {
@@ -75,52 +100,23 @@ class _MapViewState extends State<MapView> {
     );
   }
 
-  Future<double> getDistance(LatLng origin, LatLng destination) async {
-    final apiKey = maps_api;
-    final url =
-        "https://maps.googleapis.com/maps/api/distancematrix/json?origins=${origin.latitude},${origin.longitude}&destinations=${destination.latitude},${destination.longitude}&key=$apiKey";
-
-    try {
-      final response = await http.get(Uri.parse(url));
-
-      if (response.statusCode == 200) {
-        final data = json.decode(response.body);
-
-        // Check if the response contains distance information
-        if (data['rows'] != null &&
-            data['rows'].isNotEmpty &&
-            data['rows'][0]['elements'] != null &&
-            data['rows'][0]['elements'].isNotEmpty &&
-            data['rows'][0]['elements'][0]['distance'] != null) {
-          // Parse the distance from the response
-          final distanceText = data['rows'][0]['elements'][0]['distance']['text'];
-          final distanceValue = double.parse(distanceText.split(' ')[0]);
-          return distanceValue;
-        } else {
-          throw Exception('Failed to retrieve distance information');
-        }
-      } else {
-        throw Exception('Failed to load data');
-      }
-    } catch (e) {
-      print('Error: $e');
-      return Future.error('Failed to fetch distance data');
-    }
-  }
-
   void _addMarker(LatLng position, String id, BitmapDescriptor descriptor) {
     MarkerId markerId = MarkerId(id);
-    Marker marker = Marker(markerId: markerId, icon: descriptor, position: position);
+    Marker marker = Marker(
+      markerId: markerId,
+      icon: descriptor,
+      position: position,
+    );
     markers[markerId] = marker;
   }
 
   void _addPolyLine(List<LatLng> polylineCoordinates) {
-    PolylineId id = const PolylineId("poly");
+    PolylineId id = const PolylineId("polylines");
     Polyline polyline = Polyline(
       polylineId: id,
       points: polylineCoordinates,
       width: 8,
-      color: Colors.pink,
+      color: PageColors.pathColor,
     );
     if (mounted) {
       setState(() {
@@ -134,17 +130,15 @@ class _MapViewState extends State<MapView> {
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       maps_api,
-      PointLatLng(
-          latitude ?? defaultLocation.latitude, longitude ?? defaultLocation.longitude),
+      PointLatLng(currentLatitude ?? defaultLocation.latitude,
+          currentLongitude ?? defaultLocation.longitude),
       PointLatLng(targetLatitude!, targetLongitude!),
-      travelMode: TravelMode.walking,
+      travelMode: travelMode,
     );
     if (result.points.isNotEmpty) {
       polylineCoordinates =
           result.points.map((point) => LatLng(point.latitude, point.longitude)).toList();
-    } else {
-      print(result.errorMessage);
-    }
+    } else {}
     _addPolyLine(polylineCoordinates);
   }
 }

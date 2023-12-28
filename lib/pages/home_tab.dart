@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:test_map/models/building.dart';
 import 'package:test_map/pages/classes_page.dart';
 import 'package:test_map/resources/colors.dart';
+import 'package:test_map/resources/specifications.dart';
 
 class HomeTab extends StatelessWidget {
   const HomeTab({super.key});
@@ -9,7 +10,7 @@ class HomeTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+      padding: Specifications.padding_all,
       child: GridView.builder(
         gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
           maxCrossAxisExtent: MediaQuery.of(context).size.width * 0.5,
@@ -33,7 +34,7 @@ class HomeTab extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: Specifications.borderRadius,
           image: DecorationImage(
             fit: BoxFit.fill,
             image: building.getBuilding().image,
@@ -42,8 +43,7 @@ class HomeTab extends StatelessWidget {
         child: Center(
           child: Text(
             building.getBuilding().name.toUpperCase(),
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: PageColors.aguWhite, fontSize: 24),
+            style: Specifications.titleStyle,
           ),
         ),
       ),

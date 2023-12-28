@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:test_map/pages/home_tab.dart';
 import 'package:test_map/pages/map_tab.dart';
 import 'package:test_map/pages/plans_tab.dart';
+import 'package:test_map/resources/specifications.dart';
 import 'package:test_map/resources/strings.dart';
 
 class MainScreen extends StatefulWidget {
@@ -25,8 +26,8 @@ class _MainScreenState extends State<MainScreen> with TickerProviderStateMixin {
           ),
           extendBody: true,
           bottomNavigationBar: ClipRRect(
-            borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(10), topRight: Radius.circular(10)),
+            borderRadius: BorderRadius.only(
+                topLeft: Specifications.radius, topRight: Specifications.radius),
             child: BottomAppBar(
                 child: TabBar(
               indicatorColor: Colors.white,

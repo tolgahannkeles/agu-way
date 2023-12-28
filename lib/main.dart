@@ -21,11 +21,17 @@ class MyApp extends StatelessWidget {
       ],
       child: MaterialApp(
         theme: ThemeData(
-          appBarTheme:
-              AppBarTheme(centerTitle: true, backgroundColor: PageColors.aguColor),
-          drawerTheme: DrawerThemeData(backgroundColor: PageColors.aguColor),
-          bottomAppBarTheme: BottomAppBarTheme(color: PageColors.aguColor),
-        ),
+            listTileTheme: ListTileThemeData(
+              iconColor: PageColors.aguWhite,
+              textColor: PageColors.aguWhite,
+            ),
+            appBarTheme:
+                AppBarTheme(centerTitle: true, backgroundColor: PageColors.aguColor),
+            drawerTheme: DrawerThemeData(backgroundColor: PageColors.aguColor),
+            bottomAppBarTheme: BottomAppBarTheme(color: PageColors.aguColor),
+            tabBarTheme: const TabBarTheme(
+              indicatorColor: Colors.white,
+            )),
         debugShowCheckedModeBanner: false,
         home: const MainScreen(),
       ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:test_map/models/building.dart';
+import 'package:test_map/models/class.dart';
 import 'package:test_map/pages/map_tab.dart';
 import 'package:test_map/resources/colors.dart';
+import 'package:test_map/resources/specifications.dart';
 import 'package:test_map/services/LocationProvider.dart';
 
 class ClassesPage extends StatelessWidget {
@@ -22,20 +24,19 @@ class ClassesPage extends StatelessWidget {
         title: Text(building.getBuilding().name.toUpperCase()),
       ),
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        padding: Specifications.padding_horizontal,
         child: ListView.builder(
           itemCount: classes.length,
           itemBuilder: (context, index) {
             return Padding(
-              padding: const EdgeInsets.only(bottom: 10.0),
+              padding: Specifications.padding_only_bottom,
               child: Container(
                 decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(20), color: PageColors.aguColor),
+                    borderRadius: Specifications.borderRadius,
+                    color: PageColors.aguColor),
                 child: ListTile(
-                  iconColor: PageColors.aguWhite,
-                  textColor: PageColors.aguWhite,
                   onTap: () {
-                    locationProvider?.setNewTarget(building.getBuilding().location);
+                    locationProvider?.setNewTarget(classes[index]);
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => Scaffold(
                         body: const MapTab(),

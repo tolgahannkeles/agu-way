@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:test_map/models/building.dart';
 import 'package:test_map/pages/floor_screen.dart';
-import 'package:test_map/resources/colors.dart';
+import 'package:test_map/resources/specifications.dart';
 
 class PlansTab extends StatelessWidget {
   const PlansTab({super.key});
@@ -12,7 +12,7 @@ class PlansTab extends StatelessWidget {
       children: [
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+            padding: Specifications.padding_all,
             child: GridView.builder(
               gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                 maxCrossAxisExtent: MediaQuery.of(context).size.width * 0.5,
@@ -39,7 +39,7 @@ class PlansTab extends StatelessWidget {
       },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: Specifications.borderRadius,
           image: DecorationImage(
             fit: BoxFit.fill,
             image: building.getBuilding().image,
@@ -48,8 +48,7 @@ class PlansTab extends StatelessWidget {
         child: Center(
           child: Text(
             building.name.toUpperCase(),
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: PageColors.aguWhite, fontSize: 24),
+            style: Specifications.titleStyle,
           ),
         ),
       ),

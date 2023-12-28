@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:test_map/models/building.dart';
-import 'package:test_map/pages/building_screen.dart';
-import 'package:test_map/resources/colors.dart';
+import 'package:test_map/models/floor.dart';
+import 'package:test_map/pages/floor_plan_view.dart';
+import 'package:test_map/resources/specifications.dart';
 
 class FloorScreen extends StatelessWidget {
   FloorScreen({super.key, required this.building});
@@ -9,12 +10,14 @@ class FloorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(building.name),
+      ),
       body: Column(
         children: [
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 10),
+              padding: Specifications.padding_all,
               child: GridView.builder(
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: MediaQuery.of(context).size.width * 0.5,
@@ -37,12 +40,14 @@ class FloorScreen extends StatelessWidget {
     return InkWell(
       onTap: () {
         Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => const PlanScreen(),
+          builder: (context) => FloorPlanView(
+            floor: floor,
+          ),
         ));
       },
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: Specifications.borderRadius,
           image: DecorationImage(
             fit: BoxFit.fill,
             image: floor.plan,
@@ -51,8 +56,7 @@ class FloorScreen extends StatelessWidget {
         child: Center(
           child: Text(
             "Floor ${floor.index}".toUpperCase(),
-            style: TextStyle(
-                fontWeight: FontWeight.bold, color: PageColors.aguWhite, fontSize: 24),
+            style: Specifications.titleStyle,
           ),
         ),
       ),

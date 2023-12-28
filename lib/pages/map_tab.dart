@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:test_map/data/location_data.dart';
-import 'package:test_map/models/building.dart';
-import 'package:test_map/models/location.dart';
 import 'package:test_map/pages/map_view.dart';
-import 'package:test_map/resources/colors.dart';
 import 'package:test_map/services/LocationProvider.dart';
+import 'package:test_map/ui/FindClassField.dart';
 
 class MapTab extends StatefulWidget {
   const MapTab({super.key});
@@ -21,152 +17,16 @@ class _MapTabState extends State<MapTab> with RouteAware {
   @override
   Widget build(BuildContext context) {
     locationProvider = Provider.of<LocationProvider>(context);
+
     return Stack(
       children: [
         const MapView(),
         FindClassField(
-          onFound: (location) {
-            locationProvider?.setNewTarget(location);
+          onFound: (targetClass) {
+            locationProvider?.setNewTarget(targetClass);
           },
         ),
       ],
     );
-  }
-}
-
-class FindClassField extends StatefulWidget {
-  final void Function(LatLng location)? onFound;
-  const FindClassField({super.key, required this.onFound});
-
-  @override
-  State<FindClassField> createState() => _FindClassFieldState();
-}
-
-class _FindClassFieldState extends State<FindClassField> {
-  TextEditingController controller = TextEditingController();
-  List<ClassElement> originalList = [];
-  List<ClassElement> filteredList = [];
-  bool _showSuggestions = false;
-
-  List<ClassElement> getAllClasses() {
-    return Buildings.values
-        .expand((building) => building.getBuilding().floors)
-        .expand((floor) => floor.classes)
-        .toList();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    originalList = getAllClasses();
-    return Column(
-      children: [
-        TextField(
-          controller: controller,
-          onChanged: (value) {
-            setState(() {
-              _showSuggestions = true;
-            });
-            _filterList(value);
-          },
-          decoration: InputDecoration(
-            focusedBorder: const OutlineInputBorder(
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(20),
-            ),
-            prefixIcon: const Icon(Icons.search_outlined),
-            prefixIconColor: PageColors.aguWhite,
-            hintText: 'Enter text...',
-            fillColor: PageColors.aguColor,
-            hintStyle: TextStyle(color: PageColors.aguWhite, fontWeight: FontWeight.bold),
-            filled: true,
-            suffixIcon: _showSuggestions
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        _showSuggestions = false;
-                      });
-                    },
-                    icon: const Center(
-                      child: Icon(
-                        Icons.close,
-                        size: 50,
-                      ),
-                    ),
-                  )
-                : const Icon(
-                    Icons.arrow_right,
-                    size: 50,
-                  ),
-            suffixIconColor: PageColors.aguWhite,
-          ),
-        ),
-        _showSuggestions
-            ? SizedBox(
-                height: filteredList.length > 4
-                    ? MediaQuery.of(context).size.height * .25
-                    : filteredList.length * 50,
-                child: ListView.builder(
-                  itemCount: filteredList.length,
-                  addRepaintBoundaries: false,
-                  itemBuilder: (context, index) {
-                    return _searchItem(index);
-                  },
-                ),
-              )
-            : const SizedBox(),
-      ],
-    );
-  }
-
-  void _filterList(String searchText) {
-    setState(() {
-      filteredList = originalList
-          .where((item) => item.name.toLowerCase().startsWith(searchText.toLowerCase()))
-          .toList();
-    });
-  }
-
-  Widget _searchItem(int index) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 50, right: 70),
-      child: InkWell(
-        onTap: () {
-          LatLng latLng = detectBuilding(filteredList[index].name).location;
-          widget.onFound?.call(latLng);
-          _showSuggestions = false;
-        },
-        child: SizedBox(
-          height: 50,
-          child: Card(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-              color: PageColors.aguColor,
-              child: Row(
-                children: [
-                  const Padding(
-                    padding: EdgeInsets.only(left: 20.0),
-                    child: Icon(Icons.home),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 10.0),
-                    child: Text(filteredList[index].name),
-                  ),
-                ],
-              )),
-        ),
-      ),
-    );
-  }
-
-  IBuilding detectBuilding(String name) {
-    if (name.startsWith("LB")) {
-      return Lab();
-    } else if (name.startsWith("BA")) {
-      return WareHouse();
-    } else if (name.startsWith("B") || name.startsWith("A")) {
-      return Steel();
-    } else {
-      return Steel();
-    }
   }
 }
