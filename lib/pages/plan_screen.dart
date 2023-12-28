@@ -23,6 +23,8 @@ class _PlanScreenState extends State<PlanScreen> {
   late AssetImage _plan;
   late Widget question;
 
+  Timer? _timer;
+
   @override
   void initState() {
     _plan = widget.targetDoor.plan;
@@ -63,7 +65,7 @@ class _PlanScreenState extends State<PlanScreen> {
   }
 
   void showYesNoDialog() {
-    Timer(const Duration(seconds: 2), () {
+    _timer = Timer(const Duration(seconds: 2), () {
       setState(() {
         showDialog(
           context: context,
@@ -102,5 +104,13 @@ class _PlanScreenState extends State<PlanScreen> {
         );
       });
     });
+  }
+
+  @override
+  void dispose() {
+    if (_timer != null) {
+      _timer?.cancel();
+    }
+    super.dispose();
   }
 }

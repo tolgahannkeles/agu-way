@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:test_map/models/building.dart';
 import 'package:test_map/pages/classes_page.dart';
-import 'package:test_map/resources/colors.dart';
 import 'package:test_map/resources/specifications.dart';
 
 class HomeTab extends StatelessWidget {
