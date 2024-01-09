@@ -22,38 +22,16 @@ class _MapTabState extends State<MapTab> with RouteAware {
     return Stack(
       children: [
         const MapView(),
-        FindClassField(
-          onFound: (targetClass) {
-            locationProvider.setNewTarget(targetClass);
-          },
-        ),
         Positioned(
-            top: 60,
-            right: 20,
-            child: Column(
-              children: [
-                Text(
-                  "Distance: ${locationProvider.distance}",
-                  style: Specifications.titleStyle
-                      .copyWith(color: Colors.green, backgroundColor: Colors.white),
-                ),
-                Text(
-                  "Speed: ${locationProvider.speed}",
-                  style: Specifications.titleStyle
-                      .copyWith(color: Colors.green, backgroundColor: Colors.white),
-                ),
-                Text(
-                  "Floor: ${locationProvider.floor}",
-                  style: Specifications.titleStyle
-                      .copyWith(color: Colors.green, backgroundColor: Colors.white),
-                ),
-                Text(
-                  "Altitude: ${locationProvider.altitude}",
-                  style: Specifications.titleStyle
-                      .copyWith(color: Colors.green, backgroundColor: Colors.white),
-                ),
-              ],
-            ))
+          top: 10,
+          right: 10,
+          left: 10,
+          child: FindClassField(
+            onFound: (targetClass) {
+              locationProvider.setNewTarget(targetClass);
+            },
+          ),
+        ),
       ],
     );
   }

@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:test_map/models/building.dart';
-import 'package:test_map/models/floor.dart';
 import 'package:test_map/pages/floor_plan_view.dart';
 import 'package:test_map/resources/specifications.dart';
+import 'package:test_map/ui/CustomCard.dart';
 
 class FloorScreen extends StatelessWidget {
   FloorScreen({super.key, required this.building});
+
   IBuilding building;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,39 +28,23 @@ class FloorScreen extends StatelessWidget {
                 ),
                 itemCount: building.floor_size,
                 itemBuilder: (context, index) {
-                  return _floorElement(context, building.floors[index]);
+                  return CustomCard(
+                    text: "${building.floors[index].floor.name} Floor".toUpperCase(),
+                    image: building.floors[index].plan,
+                    onTap: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                        fullscreenDialog: true,
+                        builder: (context) => FloorPlanView(
+                          floor: building.floors[index],
+                        ),
+                      ));
+                    },
+                  );
                 },
               ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _floorElement(BuildContext context, FloorElement floor) {
-    return InkWell(
-      onTap: () {
-        Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => FloorPlanView(
-            floor: floor,
-          ),
-        ));
-      },
-      child: Container(
-        decoration: BoxDecoration(
-          borderRadius: Specifications.borderRadius,
-          image: DecorationImage(
-            fit: BoxFit.fill,
-            image: floor.plan,
-          ),
-        ),
-        child: Center(
-          child: Text(
-            "Floor ${floor.index}".toUpperCase(),
-            style: Specifications.titleStyle,
-          ),
-        ),
       ),
     );
   }

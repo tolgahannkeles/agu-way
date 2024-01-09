@@ -60,7 +60,7 @@ class _FindClassFieldState extends State<FindClassField> {
                     icon: const Center(
                       child: Icon(
                         Icons.close,
-                        size: 50,
+                        size: 30,
                       ),
                     ),
                   )
@@ -115,7 +115,7 @@ class _FindClassFieldState extends State<FindClassField> {
                 children: [
                   Padding(
                     padding: Specifications.padding_only_left,
-                    child: Icon(Icons.home),
+                    child: const Icon(Icons.home),
                   ),
                   Padding(
                     padding: Specifications.padding_only_left,

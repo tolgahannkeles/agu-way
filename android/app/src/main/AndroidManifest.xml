@@ -5,7 +5,7 @@
 
 
     <application
-        android:label="test_map"
+        android:label="AGU WAY"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
 

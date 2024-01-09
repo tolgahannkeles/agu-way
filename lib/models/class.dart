@@ -28,7 +28,7 @@ class ClassElement {
       classId = name.substring(1, name.length);
     } else if (name.startsWith("LB")) {
       building = Lab();
-      floorNo = int.parse(name[2]);
+      floorNo = int.parse(name[2]) + 1;
       classId = name.substring(2, name.length);
     } else {
       //invalid

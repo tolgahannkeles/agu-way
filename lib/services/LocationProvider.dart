@@ -12,11 +12,6 @@ class LocationProvider with ChangeNotifier {
   ClassElement? _targetClass;
   bool _isReached = false;
   double _distance = 0.0;
-  //----------
-  double _speed = 0.0;
-  double _altitude = 0.0;
-
-  int _floor = 0;
 
   Position? get currentLocation => _currentLocation;
   LatLng? get targetLocation => _targetLocation;
@@ -24,19 +19,10 @@ class LocationProvider with ChangeNotifier {
   DoorElement? get targetDoor => _targetDoor;
   ClassElement? get targetClass => _targetClass;
   double get distance => _distance;
-  //----------
-  double get speed => _speed;
-  double get altitude => _altitude;
-
-  int get floor => _floor;
 
   LocationProvider() {
     LocationService.getStream().listen((Position? position) {
       _currentLocation = position;
-      //----------
-      _speed = position?.speed ?? -1;
-      _floor = position!.floor ?? -1;
-      _altitude = position.altitude ?? -1;
 
       if (_targetClass != null) {
         _targetDoor = LocationService.getClosestDoor(
@@ -48,6 +34,11 @@ class LocationProvider with ChangeNotifier {
         _distance = LocationService.getDistanceGeometrical(
             LatLng(currentLocation!.latitude, currentLocation!.longitude),
             _targetLocation!);
+
+        LocationService.getDistance(
+                LatLng(currentLocation!.latitude, currentLocation!.longitude),
+                _targetLocation!)
+            .then((value) => _distance = value);
 
         if (_distance <= 0.00012267717799377897) {
           _isReached = true;

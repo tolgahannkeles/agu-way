@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:test_map/resources/colors.dart';
 
 class Specifications {
@@ -9,6 +10,13 @@ class Specifications {
   static EdgeInsets padding_only_bottom = const EdgeInsets.only(bottom: 15);
   static EdgeInsets padding_only_left = const EdgeInsets.only(left: 15);
 
-  static TextStyle titleStyle =
-      TextStyle(fontWeight: FontWeight.bold, color: PageColors.aguWhite, fontSize: 24);
+  static TextStyle cardText = TextStyle(
+    fontWeight: FontWeight.bold,
+    color: PageColors.aguWhite,
+    fontSize: 24,
+    backgroundColor: PageColors.aguColor,
+  );
+
+  static BitmapDescriptor currentLocationPin = BitmapDescriptor.defaultMarkerWithHue(90);
+  static BitmapDescriptor targetLocationPin = BitmapDescriptor.defaultMarker;
 }

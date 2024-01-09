@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:test_map/map_api.dart';
 import 'package:test_map/pages/plan_screen.dart';
 import 'package:test_map/resources/colors.dart';
+import 'package:test_map/resources/specifications.dart';
 import 'package:test_map/services/LocationProvider.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 
@@ -15,8 +16,8 @@ class MapView extends StatefulWidget {
 }
 
 class _MapViewState extends State<MapView> {
-  BitmapDescriptor currentPin = BitmapDescriptor.defaultMarkerWithHue(90);
-  BitmapDescriptor targetPin = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor currentPin = Specifications.currentLocationPin;
+  BitmapDescriptor targetPin = Specifications.targetLocationPin;
   TravelMode travelMode = TravelMode.walking;
 
   double? currentLatitude;
@@ -91,6 +92,16 @@ class _MapViewState extends State<MapView> {
       child: GoogleMap(
         initialCameraPosition: _initialMap,
         mapType: MapType.hybrid,
+        compassEnabled: false,
+        zoomControlsEnabled: false,
+        myLocationButtonEnabled: false,
+        myLocationEnabled: false,
+        indoorViewEnabled: false,
+        liteModeEnabled: false,
+        mapToolbarEnabled: false,
+        buildingsEnabled: false,
+        trafficEnabled: false,
+        fortyFiveDegreeImageryEnabled: false,
         polylines: Set<Polyline>.of(polylines.values),
         markers: Set<Marker>.of(markers.values),
         onMapCreated: (GoogleMapController controller) {

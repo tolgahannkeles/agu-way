@@ -68,6 +68,7 @@ class _PlanScreenState extends State<PlanScreen> {
     _timer = Timer(const Duration(seconds: 2), () {
       setState(() {
         showDialog(
+          barrierDismissible: false,
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(

@@ -19,7 +19,8 @@ class Steel implements IBuilding {
   List<FloorElement> get floors => [
         FloorElement(
             index: 0,
-            plan: const AssetImage("assets/plans/steel/floor0_0.png"),
+            floor: Floor.ground,
+            plan: const AssetImage("assets/plans/steel/floor0.png"),
             classes: [
               ClassElement(name: "B000"),
               ClassElement(name: "B001"),
@@ -31,6 +32,7 @@ class Steel implements IBuilding {
             ]),
         FloorElement(
             index: 1,
+            floor: Floor.first,
             plan: const AssetImage("assets/plans/steel/floor1.png"),
             classes: [
               ClassElement(name: "B100"),
@@ -42,27 +44,6 @@ class Steel implements IBuilding {
               ClassElement(name: "B106"),
               ClassElement(name: "B107"),
             ]),
-        FloorElement(
-            index: 2,
-            plan: const AssetImage("assets/plans/steel/floor2.png"),
-            classes: [
-              ClassElement(name: "B200"),
-              ClassElement(name: "B201"),
-              ClassElement(name: "B202"),
-              ClassElement(name: "B203"),
-              ClassElement(name: "B204"),
-              ClassElement(name: "B205"),
-              ClassElement(name: "B206"),
-              ClassElement(name: "B207"),
-              ClassElement(name: "B208"),
-              ClassElement(name: "B209"),
-              ClassElement(name: "B210"),
-              ClassElement(name: "B211"),
-              ClassElement(name: "B212"),
-              ClassElement(name: "B213"),
-              ClassElement(name: "B214"),
-              ClassElement(name: "B215"),
-            ]),
       ];
 
   @override
@@ -72,19 +53,15 @@ class Steel implements IBuilding {
   List<DoorElement> get doors => [
         DoorElement(
             id: "1",
-            coordinates: const LatLng(38.737055, 35.473510),
+            coordinates: const LatLng(38.737055, 35.473510), //A
             plan: const AssetImage("assets/plans/steel/floor0_0.png")),
         DoorElement(
             id: "2",
-            coordinates: const LatLng(38.736869, 35.473821),
+            coordinates: const LatLng(38.736869, 35.473821), //B
             plan: const AssetImage("assets/plans/steel/floor0_1.png")),
         DoorElement(
             id: "3",
-            coordinates: const LatLng(38.736318, 35.473916),
+            coordinates: const LatLng(38.736318, 35.473916), //C
             plan: const AssetImage("assets/plans/steel/floor0_2.png")),
-        DoorElement(
-            id: "4",
-            coordinates: const LatLng(38.736034, 35.474278),
-            plan: const AssetImage("assets/plans/steel/floor0_3.png")),
       ];
 }

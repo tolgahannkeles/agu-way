@@ -9,17 +9,17 @@ class FloorPlanView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(),
-      body: Stack(
-        children: [
-          SizedBox(
-            height: MediaQuery.of(context).size.height * .80,
-            child: PhotoView(
-              imageProvider: floor.plan,
-              enablePanAlways: true,
-            ),
+      body: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: InteractiveViewer(
+          panEnabled: true,
+          child: Image.asset(
+            floor.plan.assetName,
           ),
-        ],
+        ),
       ),
     );
   }

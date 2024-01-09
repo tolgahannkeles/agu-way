@@ -18,8 +18,9 @@ class WareHouse implements IBuilding {
   @override
   List<FloorElement> get floors => [
         FloorElement(
+          floor: Floor.ground,
           index: 0,
-          plan: const AssetImage("assets/plans/warehouse/floor0_0.png"),
+          plan: const AssetImage("assets/plans/warehouse/floor0.png"),
           classes: [
             ClassElement(name: "BA001"),
             ClassElement(name: "BA002"),
@@ -33,6 +34,7 @@ class WareHouse implements IBuilding {
           ],
         ),
         FloorElement(
+            floor: Floor.first,
             index: 1,
             plan: const AssetImage("assets/plans/warehouse/floor1.png"),
             classes: [
@@ -54,23 +56,23 @@ class WareHouse implements IBuilding {
   List<DoorElement> get doors => [
         DoorElement(
             id: "1",
-            coordinates: const LatLng(38.737471, 35.474131),
+            coordinates: const LatLng(38.737471, 35.474131), //A
             plan: const AssetImage("assets/plans/warehouse/floor0_0.png")),
         DoorElement(
             id: "2",
-            coordinates: const LatLng(38.737033, 35.474384),
+            coordinates: const LatLng(38.737033, 35.474384), //B
             plan: const AssetImage("assets/plans/warehouse/floor0_1.png")),
         DoorElement(
             id: "3",
-            coordinates: const LatLng(38.737201, 35.473742),
+            coordinates: const LatLng(38.737201, 35.473742), //C
             plan: const AssetImage("assets/plans/warehouse/floor0_2.png")),
         DoorElement(
             id: "4",
-            coordinates: const LatLng(38.736908, 35.473910),
+            coordinates: const LatLng(38.736908, 35.473910), //D
             plan: const AssetImage("assets/plans/warehouse/floor0_3.png")),
         DoorElement(
             id: "5",
-            coordinates: const LatLng(38.736498, 35.474448),
+            coordinates: const LatLng(38.736498, 35.474448), //E
             plan: const AssetImage("assets/plans/warehouse/floor0_4.png")),
       ];
 }
