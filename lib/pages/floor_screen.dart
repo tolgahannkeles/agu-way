@@ -4,6 +4,7 @@ import 'package:test_map/pages/floor_plan_view.dart';
 import 'package:test_map/resources/specifications.dart';
 import 'package:test_map/ui/CustomCard.dart';
 
+// ignore: must_be_immutable
 class FloorScreen extends StatelessWidget {
   FloorScreen({super.key, required this.building});
 

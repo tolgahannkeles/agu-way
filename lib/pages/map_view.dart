@@ -126,7 +126,7 @@ class _MapViewState extends State<MapView> {
     Polyline polyline = Polyline(
       polylineId: id,
       points: polylineCoordinates,
-      width: 8,
+      width: 4,
       color: PageColors.pathColor,
     );
     if (mounted) {
@@ -140,12 +140,12 @@ class _MapViewState extends State<MapView> {
     List<LatLng> polylineCoordinates = [];
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      maps_api,
-      PointLatLng(currentLatitude ?? defaultLocation.latitude,
-          currentLongitude ?? defaultLocation.longitude),
-      PointLatLng(targetLatitude!, targetLongitude!),
-      travelMode: travelMode,
-    );
+        maps_api,
+        PointLatLng(currentLatitude ?? defaultLocation.latitude,
+            currentLongitude ?? defaultLocation.longitude),
+        PointLatLng(targetLatitude!, targetLongitude!),
+        travelMode: travelMode,
+        optimizeWaypoints: true);
     if (result.points.isNotEmpty) {
       polylineCoordinates =
           result.points.map((point) => LatLng(point.latitude, point.longitude)).toList();

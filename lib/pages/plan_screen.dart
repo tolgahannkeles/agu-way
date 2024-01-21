@@ -8,6 +8,7 @@ import 'package:test_map/models/door.dart';
 import 'package:test_map/resources/colors.dart';
 import 'package:test_map/services/LocationProvider.dart';
 
+// ignore: must_be_immutable
 class PlanScreen extends StatefulWidget {
   ClassElement targetClass;
   DoorElement targetDoor;
@@ -65,7 +66,7 @@ class _PlanScreenState extends State<PlanScreen> {
   }
 
   void showYesNoDialog() {
-    _timer = Timer(const Duration(seconds: 2), () {
+    _timer = Timer(const Duration(seconds: 10), () {
       setState(() {
         showDialog(
           barrierDismissible: false,

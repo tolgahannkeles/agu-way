@@ -7,6 +7,7 @@ import 'package:test_map/resources/colors.dart';
 import 'package:test_map/resources/specifications.dart';
 import 'package:test_map/services/LocationProvider.dart';
 
+// ignore: must_be_immutable
 class ClassesPage extends StatelessWidget {
   Buildings building;
   ClassesPage({super.key, required this.building});

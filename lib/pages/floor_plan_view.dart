@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:photo_view/photo_view.dart';
 import 'package:test_map/models/floor.dart';
 
+// ignore: must_be_immutable
 class FloorPlanView extends StatelessWidget {
   FloorPlanView({super.key, required this.floor});
   FloorElement floor;
