@@ -1,16 +1,7 @@
-# test_map
+# AGU WAY
 
-COMP205 Term Final project.
+COMP205 Term project.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+This project is a navigation project that helps to students to find the classrooms in an easy way. I used Google Maps API for this project. To fix the indoor navigation issues, we find another way out of context. When people approch doors of a building that are assigned locations of them, we display the plans of that building. With that way people can find that classrooms in an easy way. You can find screenshots and videos of my application below.
