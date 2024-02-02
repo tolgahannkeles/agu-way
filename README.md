@@ -1,7 +1,21 @@
-# AGU WAY
+# AGU WAY 🗺️
 
-COMP205 Term project.
+This application is our term project for the COMP205 course. We developed it with my friend @kadirkilicoglu.
 
-## Getting Started
+## About Application
 
-This project is a navigation project that helps to students to find the classrooms in an easy way. I used Google Maps API for this project. To fix the indoor navigation issues, we find another way out of context. When people approch doors of a building that are assigned locations of them, we display the plans of that building. With that way people can find that classrooms in an easy way. You can find screenshots and videos of my application below.
+This project is a navigation system designed to help students easily find classrooms. We utilized the Google Maps API for this project. During the development, we faced a significant challenge—indoor navigation. To address this issue, we came up with a clever solution. As people approach doors whose locations are stored in our code, we display the floor plans of the corresponding building. In this way, individuals can effortlessly locate classrooms. You can find screenshots and videos of the application below.
+
+## Screenshots
+
+![Screenshot 1](screenshot1.png)
+![Screenshot 2](screenshot2.png)
+
+## Video
+
+[![Application Video](video_thumbnail.png)](link_to_video)
+
+For more information, please send an email [tolgahann.keles@gmail.com].
+
+---
+
